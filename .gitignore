@@ -1,0 +1,45 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+
+# Virtual environments
+venv/
+ENV/
+.env
+
+# SQLite DB and instance folder
+instance/
+WanderMate-main/instance/
+*.db
+*.sqlite3
+
+# Editor directories and files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Python cache
+*.pyc
+
+# Ignore compiled assets
+static/*.map
+
+# Logs
+*.log
+
+# Ignore Python bytecode in nested folder
+WanderMate-main/__pycache__/
+
+# Keep README and license
+!README.md
