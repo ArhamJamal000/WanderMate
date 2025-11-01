@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+
+{% block title %}{{ trip.destination }} - AI Trip Planner{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">{{ trip.destination }}</h2>
+
+<div class="bento-container">
+    <h3 class="bento-title">Trip Dashboard</h3>
+    <div class="bento-grid">
+        <!-- Trip Summary Box -->
+        <div class="bento-box bento-summary">
+            <div class="bento-header">
+                <i class="fas fa-info-circle"></i>
+                <h5>Trip Summary</h5>
+            </div>
+            <div class="bento-content">
+                <div class="summary-item">
+                    <span class="label">Destination:</span>
+                    <span class="value">{{ trip.destination }}</span>
+                </div>
+                <div class="summary-item">
+                    <span class="label">Start Date:</span>
+                    <span class="value">{{ trip.start_date }}</span>
+                </div>
+                <div class="summary-item">
+                    <span class="label">End Date:</span>
+                    <span class="value">{{ trip.end_date }}</span>
+                </div>
+                <div class="summary-item">
+                    <span class="label">Travelers:</span>
+                    <span class="value">{{ trip.travelers }}</span>
+                </div>
+                <div class="summary-item">
+                    <span class="label">Budget:</span>
+                    <span class="value">${{ trip.budget }}</span>
+                </div>
+                <div class="summary-item">
+                    <span class="label">Created:</span>
+                    <span class="value">{{ trip.created_at.strftime('%Y-%m-%d %H:%M') }}</span>
+                </div>
+                {% if trip.preferences %}
+                <div class="summary-item">
+                    <span class="label">Preferences:</span>
+                    <span class="value">{{ trip.preferences }}</span>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Daily Plan Box -->
+        <div class="bento-box bento-daily-plan">
+            <div class="bento-header">
+                <i class="fas fa-calendar-alt"></i>
+                <h5>Daily Plan</h5>
+            </div>
+            <div class="bento-content">
+                <div class="daily-plan-container">
+                    <pre class="itinerary-text">{{ trip.itinerary }}</pre>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Insights Box -->
+        <div class="bento-box bento-insights">
+            <div class="bento-header">
+                <i class="fas fa-lightbulb"></i>
+                <h5>Quick Insights</h5>
+            </div>
+            <div class="bento-content">
+                <div class="insights-badges">
+                    <span class="insight-badge">
+                        <i class="fas fa-map-marker-alt"></i> {{ trip.destination }}
+                    </span>
+                    <span class="insight-badge">
+                        <i class="fas fa-users"></i> {{ trip.travelers }} Travelers
+                    </span>
+                    <span class="insight-badge">
+                        <i class="fas fa-dollar-sign"></i> ${{ trip.budget }} Budget
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Important Notes Box -->
+        <div class="bento-box bento-notes">
+            <div class="bento-header">
+                <i class="fas fa-sticky-note"></i>
+                <h5>Important Notes</h5>
+            </div>
+            <div class="bento-content">
+                <div class="notes-list">
+                    {% if trip.preferences %}
+                    <div class="note-item">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <span>{{ trip.preferences }}</span>
+                    </div>
+                    {% else %}
+                    <p class="no-notes">No specific notes available.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="bento-actions">
+        <a href="{{ url_for('export_trip', trip_id=trip.id) }}" class="bento-btn bento-btn-primary">
+            <i class="fas fa-download"></i> Export as PDF
+        </a>
+        <a href="{{ url_for('trips') }}" class="bento-btn bento-btn-secondary">
+            <i class="fas fa-arrow-left"></i> Back to Trips
+        </a>
+    </div>
+</div>
+{% endblock %}

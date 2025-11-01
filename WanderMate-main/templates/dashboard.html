@@ -1,0 +1,276 @@
+{% extends "base.html" %}
+
+{% block title %}AI Travel Dashboard - AI Trip Planner{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <h2 class="mb-4 text-center" style="color: #ffffff; text-shadow: 0 2px 4px rgba(0,0,0,0.5);">AI Travel Dashboard</h2>
+
+            <!-- Mood Display -->
+            {% if summary and summary.mood %}
+            <div class="mood-display text-center mb-4">
+                <span class="mood-badge mood-{{ summary.mood.lower().replace('-', '') }}">
+                    {% if summary.mood == 'Relaxed' %}😌{% elif summary.mood == 'Adventurous' %}🏔️{% elif summary.mood == 'Romantic' %}💕{% elif summary.mood == 'Cultural' %}🎨{% elif summary.mood == 'Budget-Friendly' %}💰{% endif %}
+                    {{ summary.mood }} Mood
+                </span>
+            </div>
+            {% endif %}
+
+            <div class="bento-container">
+                <!-- Trip Summary Row -->
+                <div class="cards-row">
+                    <div class="bento-box trip-summary-full">
+                        <div class="bento-header">
+                            <i class="fas fa-info-circle icon"></i>
+                            <h5>Trip Summary</h5>
+                        </div>
+                        <div class="bento-content">
+                            {% if summary %}
+                            <div class="summary-grid">
+                                <div class="summary-item">
+                                    <span class="label">Destination:</span>
+                                    <span class="value">{{ summary.destination }}</span>
+                                </div>
+                                <div class="summary-item">
+                                    <span class="label">Dates:</span>
+                                    <span class="value">{{ summary.dates }}</span>
+                                </div>
+                                <div class="summary-item">
+                                    <span class="label">Travelers:</span>
+                                    <span class="value">{{ summary.travelers }}</span>
+                                </div>
+                                <div class="summary-item">
+                                    <span class="label">Budget:</span>
+                                    <span class="value">{{ summary.budget }}</span>
+                                </div>
+                                {% if summary and summary.overall_theme %}
+                                <div class="summary-item">
+                                    <span class="label">Theme:</span>
+                                    <span class="value">{{ summary.overall_theme }}</span>
+                                </div>
+                                {% endif %}
+                            </div>
+
+                            <!-- Risk Alert -->
+                            {% if risk and risk.level %}
+                            <div class="risk-level risk-{{ risk.level.lower() }}">
+                                <span class="level-badge">Risk: {{ risk.level }}</span>
+                            </div>
+                            <p class="risk-details">{{ risk.details }}</p>
+                            {% endif %}
+
+                            <!-- Overcrowd Predictor -->
+                            {% if crowd and crowd.level %}
+                            <div class="crowd-level crowd-{{ crowd.level.lower() }}">
+                                <span class="level-badge">Crowd: {{ crowd.level }}</span>
+                            </div>
+                            <p class="crowd-reason">{{ crowd.reason }}</p>
+                            {% endif %}
+
+                            <!-- Hotel Recommendations -->
+                            {% if hotels %}
+                            <div class="hotels-list">
+                                {% for hotel in hotels %}
+                                <div class="hotel-item">
+                                    <div class="hotel-info">
+                                        <h6>{{ hotel.name }}</h6>
+                                        <div class="hotel-meta">
+                                            <span class="price">{{ hotel.price_range }}</span>
+                                            <span class="rating">
+                                                <i class="fas fa-star"></i> {{ hotel.rating }}
+                                            </span>
+                                        </div>
+                                        <p class="highlight">{{ hotel.highlight }}</p>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                            {% else %}
+                            <p>No summary available</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Insights and Plan Row -->
+                <div class="cards-row">
+                    <div class="bento-box bento-insights">
+                        <div class="bento-header">
+                            <i class="fas fa-lightbulb icon"></i>
+                            <h5>Quick Insights</h5>
+                        </div>
+                        <div class="bento-content">
+                            {% if insights %}
+                            <div class="insights-badges">
+                                {% for insight in insights %}
+                                <div class="insight-badge">
+                                    <i class="fas fa-check-circle"></i>
+                                    <span>{{ insight }}</span>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            {% else %}
+                            <p class="no-insights">No insights available</p>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="bento-box bento-daily-plan">
+                        <div class="bento-header">
+                            <i class="fas fa-calendar-alt icon"></i>
+                            <h5>Daily Plan</h5>
+                        </div>
+                        <div class="bento-content">
+                            <div class="daily-plan-container">
+                                {% if daily_plan %}
+                                    {% for day, plan in daily_plan.items() %}
+                                    <div class="day-item">
+                                        <h6>{{ day }}</h6>
+                                        <div class="day-activities">
+                                            <p>{{ plan }}</p>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                {% else %}
+                                <p>No daily plan available</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Notes Row -->
+                <div class="cards-row">
+                    <div class="bento-box bento-notes">
+                        <div class="bento-header">
+                            <i class="fas fa-sticky-note icon"></i>
+                            <h5>Important Notes</h5>
+                        </div>
+                        <div class="bento-content">
+                            {% if notes %}
+                            <div class="notes-list">
+                                {% for note in notes %}
+                                <div class="note-item">
+                                    <i class="fas fa-exclamation-circle"></i>
+                                    <span>{{ note }}</span>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            {% else %}
+                            <p class="no-notes">No notes available</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+                <!-- Budget Tracking Row -->
+                <div class="cards-row">
+                    <div class="bento-box bento-budget">
+                        <div class="bento-header">
+                            <i class="fas fa-chart-pie icon"></i>
+                            <h5>Budget Tracking</h5>
+                        </div>
+                        <div class="bento-content">
+                            {% if budget_tracking %}
+                            <div class="budget-overview">
+                                <p><strong>Overview:</strong> {{ budget_tracking.overview }}</p>
+                            </div>
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Category</th>
+                                        <th>Percentage (%)</th>
+                                        <th>Estimated Cost</th>
+                                        <th>Suggestions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for item in budget_tracking.distribution_table %}
+                                    <tr>
+                                        <td>{{ item.category }}</td>
+                                        <td>{{ item.percentage }}</td>
+                                        <td>{{ item.estimated_cost }}</td>
+                                        <td>{{ item.suggestions }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                            <div class="optimization-tips">
+                                <h6>Optimization Tips:</h6>
+                                <ul>
+                                    {% for tip in budget_tracking.optimization_tips %}
+                                    <li>{{ tip }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                            {% else %}
+                            <p>No budget tracking available</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Day-wise Budget Tracing Row -->
+                <div class="cards-row">
+                    <div class="bento-box bento-daily-budget">
+                        <div class="bento-header">
+                            <i class="fas fa-calendar-day icon"></i>
+                            <h5>Day-wise Budget Tracing</h5>
+                        </div>
+                        <div class="bento-content">
+                            {% if daily_budget_plan %}
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Day</th>
+                                        <th>Estimated Spend</th>
+                                        <th>Accommodation</th>
+                                        <th>Food</th>
+                                        <th>Transport</th>
+                                        <th>Activities</th>
+                                        <th>Miscellaneous</th>
+                                        <th>Recommendations</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for day in daily_budget_plan %}
+                                    <tr>
+                                        <td>{{ day.day }}</td>
+                                        <td>{{ day.estimated_spend }}</td>
+                                        <td>{{ day.category_breakdown.Accommodation }}</td>
+                                        <td>{{ day.category_breakdown.Food }}</td>
+                                        <td>{{ day.category_breakdown.Transport }}</td>
+                                        <td>{{ day.category_breakdown.Activities }}</td>
+                                        <td>{{ day.category_breakdown.Miscellaneous }}</td>
+                                        <td>{{ day.recommendations }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                            {% else %}
+                            <p>No day-wise budget plan available</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="bento-actions">
+                {% if trip_id %}
+                <a href="{{ url_for('export_trip', trip_id=trip_id) }}" class="bento-btn bento-btn-primary">
+                    <i class="fas fa-download"></i> Download Itinerary as PDF
+                </a>
+                {% endif %}
+                <a href="{{ url_for('planner') }}" class="bento-btn bento-btn-secondary">
+                    <i class="fas fa-redo"></i> Plan Another Trip
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

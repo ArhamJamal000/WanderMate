@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block title %}Home - {% endblock %}
+
+{% block content %}
+<div class="hero-section text-center py-5">
+    <h1 class="display-4 mb-4">Plan Your Perfect Trip with AI</h1>
+    <p class="lead mb-4">Get personalized travel itineraries powered by advanced AI technology</p>
+    <a href="{{ url_for('planner') }}" class="btn btn-primary btn-lg">
+        <i class="fas fa-magic"></i> Start Planning
+    </a>
+</div>
+
+<section class="trending">
+    <h2>🌍 Trending Destinations</h2>
+    <p>Discover popular travel spots around the world</p>
+    <div class="trending-grid">
+        <div class="destination">
+            <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400&h=300&fit=crop" alt="Bali">
+            <h3>Bali, Indonesia</h3>
+        </div>
+        <div class="destination">
+            <img src="https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=400&h=300&fit=crop" alt="Paris">
+            <h3>Paris, France</h3>
+        </div>
+        <div class="destination">
+            <img src="https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=400&h=300&fit=crop" alt="Tokyo">
+            <h3>Tokyo, Japan</h3>
+        </div>
+        <div class="destination">
+            <img src="https://images.unsplash.com/photo-1613395877344-13d4a8e0d49e?w=400&h=300&fit=crop" alt="Santorini">
+            <h3>Santorini, Greece</h3>
+        </div>
+    </div>
+</section>
+
+<div class="row mt-5">
+    <div class="col-md-4 mb-4">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <i class="fas fa-brain fa-3x text-primary mb-3"></i>
+                <h5 class="card-title">AI-Powered Planning</h5>
+                <p class="card-text">Our advanced AI analyzes your preferences to create the perfect itinerary tailored just for you.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <i class="fas fa-save fa-3x text-success mb-3"></i>
+                <h5 class="card-title">Save & Export</h5>
+                <p class="card-text">Save your trips and export them as PDF for easy sharing and offline access.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <i class="fas fa-mobile-alt fa-3x text-info mb-3"></i>
+                <h5 class="card-title">Responsive Design</h5>
+                <p class="card-text">Access your trip plans anywhere with our mobile-friendly, responsive design.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="text-center mt-5">
+    <h2>How It Works</h2>
+    <div class="row mt-4">
+        <div class="col-md-3">
+            <div class="step-circle">1</div>
+            <h5>Select Mood</h5>
+            <p>Choose your travel mood and enter trip details</p>
+        </div>
+        <div class="col-md-3">
+            <div class="step-circle">2</div>
+            <h5>AI Generation</h5>
+            <p>Our AI creates a personalized itinerary with analytics</p>
+        </div>
+        <div class="col-md-3">
+            <div class="step-circle">3</div>
+            <h5>Review & Save</h5>
+            <p>Review your trip plan and save it</p>
+        </div>
+        <div class="col-md-3">
+            <div class="step-circle">4</div>
+            <h5>Export & Go</h5>
+            <p>Export as PDF and start your adventure</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

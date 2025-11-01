@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}My Trips - AI Trip Planner{% endblock %}
+
+{% block content %}
+<h2 class="mb-4" style="color: #ffffff; text-shadow: 0 2px 4px rgba(0,0,0,0.5);">My Saved Trips</h2>
+
+{% if trips %}
+<div class="row">
+    {% for trip in trips %}
+    <div class="col-md-6 mb-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">{{ trip.destination }}</h5>
+                <p class="card-text">
+                    <strong>Dates:</strong> {{ trip.start_date }} to {{ trip.end_date }}<br>
+                    <strong>Travelers:</strong> {{ trip.travelers }}<br>
+                    <strong>Budget:</strong> ${{ trip.budget }}
+                </p>
+                <div class="btn-group">
+                    <a href="{{ url_for('trip_detail', trip_id=trip.id) }}" class="btn btn-primary btn-sm">
+                        <i class="fas fa-eye"></i> View Details
+                    </a>
+                    <a href="{{ url_for('export_trip', trip_id=trip.id) }}" class="btn btn-success btn-sm">
+                        <i class="fas fa-download"></i> Export PDF
+                    </a>
+                    <button class="btn btn-outline-danger btn-sm delete-trip" data-trip-id="{{ trip.id }}">
+                        <i class="fas fa-trash"></i> Delete
+                    </button>
+                </div>
+            </div>
+            <div class="card-footer text-muted">
+                Created: {{ trip.created_at.strftime('%Y-%m-%d %H:%M') }}
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="text-center py-5">
+    <i class="fas fa-suitcase fa-5x text-muted mb-3"></i>
+    <h4 class="text-muted">No trips saved yet</h4>
+    <p class="text-muted">Start planning your first trip!</p>
+    <a href="{{ url_for('planner') }}" class="btn btn-primary">
+        <i class="fas fa-plus"></i> Plan a Trip
+    </a>
+</div>
+{% endif %}
+{% endblock %}
