@@ -43,3 +43,5 @@ WanderMate-main/__pycache__/
 
 # Keep README and license
 !README.md
+.env
+test_gemini.py

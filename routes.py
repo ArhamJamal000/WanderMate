@@ -1,7 +1,7 @@
 from flask import render_template, request, jsonify, flash, redirect, url_for, send_file
 from app import app, db
 from models import Trip
-import google.generativeai as genai
+from google import genai
 from datetime import datetime
 import io
 from reportlab.pdfgen import canvas
@@ -11,10 +11,36 @@ from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, Tabl
 from reportlab.lib import colors
 import re
 import json
+import time
 
 # Configure Gemini API
-genai.configure(api_key=app.config['GEMINI_API_KEY'])
-model = genai.GenerativeModel('gemini-2.0-flash')
+client = genai.Client(api_key=app.config['GEMINI_API_KEY'])
+
+# Models to try in order (primary → fallback)
+GEMINI_MODELS = ['gemini-2.5-flash', 'gemini-1.5-flash']
+
+def generate_with_retry(prompt, max_retries=3, initial_delay=5):
+    """Call Gemini API with exponential backoff retry and model fallback."""
+    for model_name in GEMINI_MODELS:
+        delay = initial_delay
+        for attempt in range(max_retries):
+            try:
+                response = client.models.generate_content(
+                    model=model_name,
+                    contents=prompt
+                )
+                return response
+            except Exception as e:
+                err_str = str(e)
+                is_retryable = '503' in err_str or '429' in err_str or 'UNAVAILABLE' in err_str or 'RESOURCE_EXHAUSTED' in err_str
+                if is_retryable and attempt < max_retries - 1:
+                    time.sleep(delay)
+                    delay *= 2  # exponential backoff
+                elif is_retryable and attempt == max_retries - 1:
+                    break  # try next model
+                else:
+                    raise  # non-retryable error, raise immediately
+    raise Exception('All Gemini models are currently unavailable. Please try again in a moment.')
 
 
 
@@ -254,7 +280,7 @@ def generate_itinerary():
     """
 
     try:
-        response = model.generate_content(prompt)
+        response = generate_with_retry(prompt)
         itinerary_json = response.text.strip()
 
         # Clean the response to extract JSON (remove markdown code blocks if present)
