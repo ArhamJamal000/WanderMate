@@ -1,63 +1,112 @@
 {% extends "base.html" %}
 
-{% block title %}Trip Planner - AI Trip Planner{% endblock %}
+{% block title %}Trip Planner - WanderMate{% endblock %}
 
 {% block content %}
-<div class="container-fluid">
+<!-- Header Background -->
+<div class="text-white py-4 mb-4 position-relative overflow-hidden shadow-sm" style="background: url('https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=1600&h=400&fit=crop') center/cover no-repeat; border-radius: 0 0 1.5rem 1.5rem;">
+    <!-- Vibrant gradient overlay -->
+    <div class="position-absolute top-0 start-0 w-100 h-100" style="background: linear-gradient(to right, rgba(15, 23, 42, 0.8), rgba(79, 70, 229, 0.4));"></div>
+    <div class="container text-center pt-3 pb-2 position-relative" style="z-index: 1;">
+        <h2 class="fs-3 fw-bold text-white mb-1" style="text-shadow: 0 2px 4px rgba(0,0,0,0.5);">Design Your Journey</h2>
+        <p class="text-white opacity-75 fs-6 mb-0" style="text-shadow: 0 1px 2px rgba(0,0,0,0.5);">Tell us what you're looking for, and we'll craft the perfect itinerary.</p>
+    </div>
+</div>
+
+<div class="container mb-5">
     <div class="row justify-content-center">
-        <div class="col-lg-8">
-            <h2 class="mb-4 text-center" style="color: #ffffff; text-shadow: 0 2px 4px rgba(0,0,0,0.5);">Plan Your Trip</h2>
-            <form method="POST" id="tripForm" class="text-center">
-                <div class="mb-3">
-                    <label for="destination" class="form-label">Destination</label>
-                    <input type="text" class="form-control mx-auto" style="max-width: 400px;" id="destination" name="destination" required>
-                </div>
-                <div class="row justify-content-center">
-                    <div class="col-md-6 mb-3">
-                        <label for="start_date" class="form-label">Start Date</label>
-                        <input type="date" class="form-control" id="start_date" name="start_date" min="{{ today }}" required>
+        <div class="col-lg-8 col-xl-7">
+            <div class="planner-card">
+                <form method="POST" id="tripForm">
+                    <!-- Destination -->
+                    <div class="mb-4">
+                        <label for="destination" class="form-label">
+                            <i class="fas fa-map-marker-alt text-primary me-2"></i>Where to?
+                        </label>
+                        <input type="text" class="form-control form-control-lg shadow-sm" id="destination" name="destination" placeholder="e.g. Kyoto, Japan" required>
                     </div>
-                    <div class="col-md-6 mb-3">
-                        <label for="end_date" class="form-label">End Date</label>
-                        <input type="date" class="form-control" id="end_date" name="end_date" min="{{ today }}" required>
+
+                    <!-- Dates -->
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <label for="start_date" class="form-label">
+                                <i class="fas fa-calendar-alt text-primary me-2"></i>Start Date
+                            </label>
+                            <input type="date" class="form-control form-control-lg shadow-sm" id="start_date" name="start_date" min="{{ today }}" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="end_date" class="form-label">
+                                <i class="fas fa-calendar-check text-primary me-2"></i>End Date
+                            </label>
+                            <input type="date" class="form-control form-control-lg shadow-sm" id="end_date" name="end_date" min="{{ today }}" required>
+                        </div>
                     </div>
-                </div>
-                <div class="mb-3">
-                    <label for="travelers" class="form-label">Number of Travelers</label>
-                    <input type="number" class="form-control mx-auto" style="max-width: 400px;" id="travelers" name="travelers" min="1" value="1" required>
-                </div>
-                <div class="mb-3">
-                    <label for="budget" class="form-label">Budget (USD)</label>
-                    <input type="number" class="form-control mx-auto" style="max-width: 400px;" id="budget" name="budget" min="0.01" step="0.01" required>
-                </div>
-                <div class="mb-3">
-                    <label for="mood" class="form-label">Travel Mood</label>
-                    <select class="form-control mx-auto" style="max-width: 400px;" id="mood" name="mood" required>
-                        <option value="">Select your travel mood...</option>
-                        <option value="Relaxed">😌 Relaxed</option>
-                        <option value="Adventurous">🏔️ Adventurous</option>
-                        <option value="Romantic">💕 Romantic</option>
-                        <option value="Cultural">🎨 Cultural</option>
-                        <option value="Budget-Friendly">💰 Budget-Friendly</option>
-                    </select>
-                </div>
-                <div class="mb-3">
-                    <label for="preferences" class="form-label">Special Preferences</label>
-                    <textarea class="form-control mx-auto" style="max-width: 400px;" id="preferences" name="preferences" rows="3" placeholder="e.g., vegetarian food, adventure activities, cultural sites, etc."></textarea>
-                </div>
-                <button type="submit" class="btn btn-primary btn-lg" id="generateBtn">
-                    <i class="fas fa-magic"></i> Start Planning
-                </button>
-                <div id="planning" class="text-center mt-3" style="display: none;">
-                    <img src="{{ url_for('static', filename='images/loading.gif') }}" alt="Planning..." class="loading-gif">
-                    <p>Planning your trip...</p>
-                </div>
-            </form>
+
+                    <!-- Travelers & Budget -->
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <label for="travelers" class="form-label">
+                                <i class="fas fa-user-friends text-primary me-2"></i>Travelers
+                            </label>
+                            <div class="input-group input-group-lg shadow-sm">
+                                <span class="input-group-text bg-white border-end-0"><i class="fas fa-users text-muted"></i></span>
+                                <input type="number" class="form-control border-start-0" id="travelers" name="travelers" min="1" value="2" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="budget" class="form-label">
+                                <i class="fas fa-wallet text-primary me-2"></i>Total Budget (USD)
+                            </label>
+                            <div class="input-group input-group-lg shadow-sm">
+                                <span class="input-group-text bg-white border-end-0 text-muted">$</span>
+                                <input type="number" class="form-control border-start-0" id="budget" name="budget" min="1" step="1" placeholder="2500" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Mood -->
+                    <div class="mb-4">
+                        <label for="mood" class="form-label">
+                            <i class="fas fa-smile-beam text-primary me-2"></i>Travel Vibe
+                        </label>
+                        <select class="form-select form-select-lg shadow-sm" id="mood" name="mood" required>
+                            <option value="" selected disabled>Select your travel mood...</option>
+                            <option value="Relaxed">😌 Relaxed & Chill</option>
+                            <option value="Adventurous">🏔️ Adventurous & Active</option>
+                            <option value="Romantic">💕 Romantic Getaway</option>
+                            <option value="Cultural">🎨 Cultural & Historic</option>
+                            <option value="Budget-Friendly">💰 Budget-Friendly Explorer</option>
+                        </select>
+                    </div>
+
+                    <!-- Preferences -->
+                    <div class="mb-5">
+                        <label for="preferences" class="form-label">
+                            <i class="fas fa-star text-primary me-2"></i>Special Preferences
+                        </label>
+                        <textarea class="form-control form-control-lg shadow-sm" id="preferences" name="preferences" rows="3" placeholder="e.g., vegetarian food only, prefer boutique hotels, must see art museums..."></textarea>
+                    </div>
+
+                    <!-- Submit -->
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary btn-lg rounded-pill shadow-lg py-3 fs-5" id="generateBtn">
+                            <i class="fas fa-magic me-2"></i> Generate AI Itinerary
+                        </button>
+                    </div>
+                    
+                    <!-- Loading State -->
+                    <div id="planning" class="text-center mt-4" style="display: none;">
+                        <img src="{{ url_for('static', filename='images/loading.gif') }}" alt="Planning..." class="loading-gif mb-3">
+                        <h5 class="text-primary fw-bold">Curating your perfect trip...</h5>
+                        <p class="text-muted small">Our AI is analyzing thousands of data points to create your personalized itinerary.</p>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 </div>
 
-<div class="container-fluid mt-5">
+<div class="container mt-5">
     <div id="itineraryContainer" style="display: none;">
         <!-- Itinerary content will be loaded here via AJAX -->
     </div>
