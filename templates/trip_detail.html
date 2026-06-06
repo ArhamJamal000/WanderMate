@@ -1,115 +1,110 @@
 {% extends "base.html" %}
 
-{% block title %}{{ trip.destination }} - AI Trip Planner{% endblock %}
+{% block title %}{{ trip.destination }} - WanderMate{% endblock %}
 
 {% block content %}
-<h2 class="mb-4">{{ trip.destination }}</h2>
-
-<div class="bento-container">
-    <h3 class="bento-title">Trip Dashboard</h3>
-    <div class="bento-grid">
-        <!-- Trip Summary Box -->
-        <div class="bento-box bento-summary">
-            <div class="bento-header">
-                <i class="fas fa-info-circle"></i>
-                <h5>Trip Summary</h5>
-            </div>
-            <div class="bento-content">
-                <div class="summary-item">
-                    <span class="label">Destination:</span>
-                    <span class="value">{{ trip.destination }}</span>
-                </div>
-                <div class="summary-item">
-                    <span class="label">Start Date:</span>
-                    <span class="value">{{ trip.start_date }}</span>
-                </div>
-                <div class="summary-item">
-                    <span class="label">End Date:</span>
-                    <span class="value">{{ trip.end_date }}</span>
-                </div>
-                <div class="summary-item">
-                    <span class="label">Travelers:</span>
-                    <span class="value">{{ trip.travelers }}</span>
-                </div>
-                <div class="summary-item">
-                    <span class="label">Budget:</span>
-                    <span class="value">${{ trip.budget }}</span>
-                </div>
-                <div class="summary-item">
-                    <span class="label">Created:</span>
-                    <span class="value">{{ trip.created_at.strftime('%Y-%m-%d %H:%M') }}</span>
-                </div>
-                {% if trip.preferences %}
-                <div class="summary-item">
-                    <span class="label">Preferences:</span>
-                    <span class="value">{{ trip.preferences }}</span>
-                </div>
-                {% endif %}
-            </div>
+<div class="container py-5">
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-5 pb-3 border-bottom border-light">
+        <div>
+            <span class="badge bg-primary bg-opacity-10 text-primary mb-2 border border-primary border-opacity-25 px-2 py-1 rounded-pill">Saved Trip</span>
+            <h2 class="fw-bold mb-0 display-5">{{ trip.destination }}</h2>
         </div>
-
-        <!-- Daily Plan Box -->
-        <div class="bento-box bento-daily-plan">
-            <div class="bento-header">
-                <i class="fas fa-calendar-alt"></i>
-                <h5>Daily Plan</h5>
-            </div>
-            <div class="bento-content">
-                <div class="daily-plan-container">
-                    <pre class="itinerary-text">{{ trip.itinerary }}</pre>
-                </div>
-            </div>
+        <div class="d-none d-md-flex gap-3">
+            <a href="{{ url_for('trips') }}" class="btn btn-secondary rounded-pill">
+                <i class="fas fa-arrow-left me-2"></i> Back
+            </a>
+            <a href="{{ url_for('export_trip', trip_id=trip.id) }}" class="btn btn-primary rounded-pill shadow-sm">
+                <i class="fas fa-download me-2"></i> Export PDF
+            </a>
         </div>
+    </div>
 
-        <!-- Quick Insights Box -->
-        <div class="bento-box bento-insights">
-            <div class="bento-header">
-                <i class="fas fa-lightbulb"></i>
-                <h5>Quick Insights</h5>
-            </div>
-            <div class="bento-content">
-                <div class="insights-badges">
-                    <span class="insight-badge">
-                        <i class="fas fa-map-marker-alt"></i> {{ trip.destination }}
-                    </span>
-                    <span class="insight-badge">
-                        <i class="fas fa-users"></i> {{ trip.travelers }} Travelers
-                    </span>
-                    <span class="insight-badge">
-                        <i class="fas fa-dollar-sign"></i> ${{ trip.budget }} Budget
-                    </span>
-                </div>
-            </div>
-        </div>
-
-        <!-- Important Notes Box -->
-        <div class="bento-box bento-notes">
-            <div class="bento-header">
-                <i class="fas fa-sticky-note"></i>
-                <h5>Important Notes</h5>
-            </div>
-            <div class="bento-content">
-                <div class="notes-list">
-                    {% if trip.preferences %}
-                    <div class="note-item">
-                        <i class="fas fa-exclamation-triangle"></i>
-                        <span>{{ trip.preferences }}</span>
+    <div class="row g-4">
+        <!-- Main Content (Itinerary) -->
+        <div class="col-lg-8">
+            <div class="bento-box h-100 shadow-sm border-0">
+                <div class="bento-header bg-white border-bottom-0 pb-0 pt-4 px-4">
+                    <div class="rounded bg-primary bg-opacity-10 p-2 me-3">
+                        <i class="fas fa-calendar-alt text-primary fs-5"></i>
                     </div>
-                    {% else %}
-                    <p class="no-notes">No specific notes available.</p>
-                    {% endif %}
+                    <h4 class="fw-bold mb-0">Detailed Itinerary</h4>
+                </div>
+                <div class="bento-content px-4 py-4">
+                    <div class="bg-light p-4 rounded-4 border border-light">
+                        <pre class="itinerary-text font-monospace text-secondary" style="white-space: pre-wrap; font-size: 0.95rem;">{{ trip.itinerary }}</pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar (Details) -->
+        <div class="col-lg-4">
+            <div class="d-flex flex-column gap-4">
+                
+                <!-- Summary Bento -->
+                <div class="bento-box shadow-sm border-0">
+                    <div class="bento-header bg-white border-bottom-0 pb-0 pt-4 px-4">
+                        <div class="rounded bg-info bg-opacity-10 p-2 me-2">
+                            <i class="fas fa-info-circle text-info"></i>
+                        </div>
+                        <h5 class="fw-bold mb-0">Trip Details</h5>
+                    </div>
+                    <div class="bento-content px-4 pb-4">
+                        <div class="d-flex flex-column gap-3">
+                            <div class="d-flex align-items-center justify-content-between pb-2 border-bottom border-light">
+                                <span class="text-secondary small"><i class="fas fa-plane-departure me-2 opacity-50"></i>Start</span>
+                                <span class="fw-medium text-dark">{{ trip.start_date }}</span>
+                            </div>
+                            <div class="d-flex align-items-center justify-content-between pb-2 border-bottom border-light">
+                                <span class="text-secondary small"><i class="fas fa-plane-arrival me-2 opacity-50"></i>End</span>
+                                <span class="fw-medium text-dark">{{ trip.end_date }}</span>
+                            </div>
+                            <div class="d-flex align-items-center justify-content-between pb-2 border-bottom border-light">
+                                <span class="text-secondary small"><i class="fas fa-users me-2 opacity-50"></i>Travelers</span>
+                                <span class="fw-medium text-dark">{{ trip.travelers }}</span>
+                            </div>
+                            <div class="d-flex align-items-center justify-content-between pb-2 border-bottom border-light">
+                                <span class="text-secondary small"><i class="fas fa-wallet me-2 opacity-50"></i>Budget</span>
+                                <span class="fw-bold text-success">${{ trip.budget }}</span>
+                            </div>
+                            <div class="d-flex align-items-center justify-content-between">
+                                <span class="text-secondary small"><i class="fas fa-clock me-2 opacity-50"></i>Saved On</span>
+                                <span class="text-muted small">{{ trip.created_at.strftime('%b %d, %Y') }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Preferences Bento -->
+                <div class="bento-box shadow-sm border-0">
+                    <div class="bento-header bg-white border-bottom-0 pb-0 pt-4 px-4">
+                        <div class="rounded bg-warning bg-opacity-10 p-2 me-2">
+                            <i class="fas fa-star text-warning"></i>
+                        </div>
+                        <h5 class="fw-bold mb-0">Preferences</h5>
+                    </div>
+                    <div class="bento-content px-4 pb-4">
+                        {% if trip.preferences %}
+                        <div class="bg-warning bg-opacity-10 rounded-3 p-3 border border-warning border-opacity-25">
+                            <p class="text-dark small mb-0 lh-lg"><i class="fas fa-quote-left text-warning opacity-50 me-2"></i>{{ trip.preferences }}</p>
+                        </div>
+                        {% else %}
+                        <p class="text-muted small mb-0 text-center py-2">No special preferences specified.</p>
+                        {% endif %}
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-
-    <!-- Action Buttons -->
-    <div class="bento-actions">
-        <a href="{{ url_for('export_trip', trip_id=trip.id) }}" class="bento-btn bento-btn-primary">
-            <i class="fas fa-download"></i> Export as PDF
+    
+    <!-- Mobile Actions -->
+    <div class="d-flex d-md-none gap-3 mt-4 flex-column">
+        <a href="{{ url_for('export_trip', trip_id=trip.id) }}" class="btn btn-primary rounded-pill w-100 shadow-sm py-3">
+            <i class="fas fa-download me-2"></i> Export PDF
         </a>
-        <a href="{{ url_for('trips') }}" class="bento-btn bento-btn-secondary">
-            <i class="fas fa-arrow-left"></i> Back to Trips
+        <a href="{{ url_for('trips') }}" class="btn btn-secondary rounded-pill w-100 py-3">
+            <i class="fas fa-arrow-left me-2"></i> Back to Trips
         </a>
     </div>
 </div>

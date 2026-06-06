@@ -3,57 +3,81 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}AI Trip Planner{% endblock %}</title>
+    <title>{% block title %}WanderMate - Modern AI Trip Planner{% endblock %}</title>
+    <!-- Favicon -->
     <link rel="icon" href="{{ url_for('static', filename='images/logo1.png') }}" type="image/png">
+    
+    <!-- Google Fonts: Outfit (Headings) and Inter (Body) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- FontAwesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <!-- Custom Modern CSS -->
     <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <!-- Sleek, Modern Edge-to-Edge Glass Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light glass-nav shadow-sm py-1" style="position: sticky; top: 0; z-index: 1000;">
         <div class="container">
             <a class="navbar-brand" href="{{ url_for('index') }}">
-                <img src="{{ url_for('static', filename='images/logo2.png') }}" alt="Logo" class="navbar-logo">
+                <!-- Logo with negative margins to appear larger without inflating the navbar container -->
+                <img src="{{ url_for('static', filename='images/logo2.png') }}" alt="WanderMate" style="height: 70px; margin: -10px 0;">
             </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
+            <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <i class="fas fa-bars fs-4 text-primary"></i>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
+                <ul class="navbar-nav ms-auto align-items-center gap-2">
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('index') }}">Home</a>
+                        <a class="nav-link fw-semibold" href="{{ url_for('index') }}">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('planner') }}">Plan Trip</a>
+                        <a class="nav-link fw-semibold" href="{{ url_for('planner') }}">Plan Trip</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('trips') }}">My Trips</a>
+                        <a class="nav-link fw-semibold" href="{{ url_for('trips') }}">My Trips</a>
+                    </li>
+                    <li class="nav-item ms-lg-3 mt-3 mt-lg-0">
+                        <a href="{{ url_for('planner') }}" class="btn btn-primary rounded-pill px-4">Get Started</a>
                     </li>
                 </ul>
             </div>
         </div>
     </nav>
 
-    <main class="container mt-4">
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                {% for category, message in messages %}
-                    <div class="alert alert-{{ 'danger' if category == 'error' else 'success' }}">
-                        {{ message }}
-                    </div>
-                {% endfor %}
-            {% endif %}
-        {% endwith %}
+    <main class="container-fluid px-0">
+        <div class="container mt-4">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ 'danger' if category == 'error' else 'success' }} shadow-sm border-0 rounded-3">
+                            <i class="fas fa-{{ 'exclamation-circle' if category == 'error' else 'check-circle' }} me-2"></i>
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </div>
 
         {% block content %}{% endblock %}
     </main>
 
-    <footer class="bg-light text-center text-muted mt-5 py-3">
+    <footer class="py-5 text-center text-muted">
         <div class="container">
-            <p>&copy; 2025 AI Trip Planner- Created by Breaking Codes .</p>
+            <div class="mb-3">
+                <img src="{{ url_for('static', filename='images/logo1.png') }}" alt="Logo" style="height: 30px; opacity: 0.7;">
+            </div>
+            <p class="mb-0 fw-medium">&copy; 2026 WanderMate AI Trip Planner. Crafted for modern travelers.</p>
         </div>
     </footer>
 
+    <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 </body>

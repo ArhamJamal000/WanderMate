@@ -1,49 +1,86 @@
 {% extends "base.html" %}
 
-{% block title %}My Trips - AI Trip Planner{% endblock %}
+{% block title %}My Trips - WanderMate{% endblock %}
 
 {% block content %}
-<h2 class="mb-4" style="color: #ffffff; text-shadow: 0 2px 4px rgba(0,0,0,0.5);">My Saved Trips</h2>
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-5 border-bottom border-light pb-4">
+        <div>
+            <h2 class="fw-bold mb-1">My Saved Trips</h2>
+            <p class="text-secondary mb-0">Manage your past and upcoming adventures</p>
+        </div>
+        <a href="{{ url_for('planner') }}" class="btn btn-primary rounded-pill shadow-sm d-none d-md-inline-flex">
+            <i class="fas fa-plus me-2"></i> Plan New Trip
+        </a>
+    </div>
 
-{% if trips %}
-<div class="row">
-    {% for trip in trips %}
-    <div class="col-md-6 mb-4">
-        <div class="card h-100">
-            <div class="card-body">
-                <h5 class="card-title">{{ trip.destination }}</h5>
-                <p class="card-text">
-                    <strong>Dates:</strong> {{ trip.start_date }} to {{ trip.end_date }}<br>
-                    <strong>Travelers:</strong> {{ trip.travelers }}<br>
-                    <strong>Budget:</strong> ${{ trip.budget }}
-                </p>
-                <div class="btn-group">
-                    <a href="{{ url_for('trip_detail', trip_id=trip.id) }}" class="btn btn-primary btn-sm">
-                        <i class="fas fa-eye"></i> View Details
+    {% if trips %}
+    <div class="row g-4">
+        {% for trip in trips %}
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100 border-0 shadow-sm transition-transform hover-scale bento-box">
+                <!-- Card Header -->
+                <div class="card-header bg-white border-bottom-0 pt-4 px-4 pb-0 d-flex justify-content-between align-items-start">
+                    <div class="rounded-circle bg-primary bg-opacity-10 d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
+                        <i class="fas fa-map-marker-alt text-primary fs-5"></i>
+                    </div>
+                    <span class="badge bg-light text-secondary border fw-normal">{{ trip.created_at.strftime('%b %d, %Y') }}</span>
+                </div>
+                
+                <!-- Card Body -->
+                <div class="card-body px-4 py-3">
+                    <h4 class="card-title fw-bold mb-3 text-dark text-truncate">{{ trip.destination }}</h4>
+                    
+                    <div class="d-flex flex-column gap-2 mb-4">
+                        <div class="d-flex align-items-center text-secondary small">
+                            <i class="fas fa-calendar-alt w-20px me-2 text-primary opacity-50"></i>
+                            <span>{{ trip.start_date }} &rarr; {{ trip.end_date }}</span>
+                        </div>
+                        <div class="d-flex align-items-center text-secondary small">
+                            <i class="fas fa-user-friends w-20px me-2 text-primary opacity-50"></i>
+                            <span>{{ trip.travelers }} Travelers</span>
+                        </div>
+                        <div class="d-flex align-items-center text-secondary small">
+                            <i class="fas fa-wallet w-20px me-2 text-primary opacity-50"></i>
+                            <span class="text-success fw-medium">${{ trip.budget }}</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Card Footer (Actions) -->
+                <div class="card-footer bg-light border-top-0 p-3 d-flex gap-2 justify-content-center">
+                    <a href="{{ url_for('trip_detail', trip_id=trip.id) }}" class="btn btn-sm btn-white border shadow-sm flex-grow-1" title="View">
+                        <i class="fas fa-eye text-primary"></i>
                     </a>
-                    <a href="{{ url_for('export_trip', trip_id=trip.id) }}" class="btn btn-success btn-sm">
-                        <i class="fas fa-download"></i> Export PDF
+                    <a href="{{ url_for('export_trip', trip_id=trip.id) }}" class="btn btn-sm btn-white border shadow-sm flex-grow-1" title="Export">
+                        <i class="fas fa-download text-success"></i>
                     </a>
-                    <button class="btn btn-outline-danger btn-sm delete-trip" data-trip-id="{{ trip.id }}">
-                        <i class="fas fa-trash"></i> Delete
+                    <button class="btn btn-sm btn-white border shadow-sm text-danger flex-grow-1 delete-trip" data-trip-id="{{ trip.id }}" title="Delete">
+                        <i class="fas fa-trash"></i>
                     </button>
                 </div>
             </div>
-            <div class="card-footer text-muted">
-                Created: {{ trip.created_at.strftime('%Y-%m-%d %H:%M') }}
-            </div>
         </div>
+        {% endfor %}
     </div>
-    {% endfor %}
+    {% else %}
+    <div class="text-center py-5 my-5 bg-white rounded-4 shadow-sm border border-light">
+        <div class="rounded-circle bg-light d-inline-flex align-items-center justify-content-center mb-4" style="width: 100px; height: 100px;">
+            <i class="fas fa-suitcase-rolling fa-3x text-muted opacity-50"></i>
+        </div>
+        <h3 class="fw-bold text-dark mb-2">No trips saved yet</h3>
+        <p class="text-secondary mb-4">Your travel history is currently empty. Ready to start exploring?</p>
+        <a href="{{ url_for('planner') }}" class="btn btn-primary btn-lg rounded-pill px-4 shadow-sm">
+            <i class="fas fa-magic me-2"></i> Plan Your First Trip
+        </a>
+    </div>
+    {% endif %}
 </div>
-{% else %}
-<div class="text-center py-5">
-    <i class="fas fa-suitcase fa-5x text-muted mb-3"></i>
-    <h4 class="text-muted">No trips saved yet</h4>
-    <p class="text-muted">Start planning your first trip!</p>
-    <a href="{{ url_for('planner') }}" class="btn btn-primary">
-        <i class="fas fa-plus"></i> Plan a Trip
-    </a>
-</div>
-{% endif %}
+
+<style>
+    .w-20px { width: 20px; text-align: center; }
+    .btn-white { background: #fff; color: var(--wm-text-main); }
+    .btn-white:hover { background: var(--wm-bg); }
+    .hover-scale:hover { transform: translateY(-5px); box-shadow: var(--wm-shadow-md) !important; }
+</style>
 {% endblock %}
